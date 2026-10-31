@@ -188,9 +188,12 @@ label{font-size:11px;font-weight:650;margin:14px 0 6px}
 \n.view-hidden{display:none!important}.settings-screen{margin:16px 0 90px}.settings-screen .utility{display:flex;flex-wrap:wrap;gap:10px}.settings-language{margin-top:18px}.settings-language label{display:block}
 
 /* Distinct app screens: each tab owns its own view container */
-.screen-host{min-height:calc(100vh - 170px);position:relative}
-.app-screen{display:none;opacity:0;transform:translateY(8px)}
-.app-screen.is-active{display:block;animation:screenEnter .22s ease forwards}
+body.averlyx-screen-mode{overflow-x:hidden}
+body.averlyx-screen-mode .app{min-height:100svh}
+body.averlyx-screen-mode .app-screen[aria-hidden="true"]{pointer-events:none}
+.screen-host{min-height:0;position:relative;isolation:isolate}
+.app-screen{display:none!important;opacity:0;transform:translateY(8px);width:100%;min-height:calc(100svh - 190px)}
+.app-screen.is-active{display:block!important;animation:screenEnter .22s ease forwards}
 .screen-heading{padding:5px 2px 18px;margin:0 0 16px}
 .screen-kicker{display:block;color:var(--green);font-size:9px;font-weight:800;letter-spacing:2px;margin-bottom:8px}
 .screen-heading h1{font-size:clamp(23px,4vw,31px);line-height:1.15;margin:0 0 7px;letter-spacing:-.7px}
@@ -203,7 +206,7 @@ label{font-size:11px;font-weight:650;margin:14px 0 6px}
 .app-screen > #achievementsSection{margin-top:0}
 .settings-screen{margin:0 0 90px}
 @keyframes screenEnter{to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){.screen-host{min-height:calc(100vh - 150px)}.screen-heading{padding-bottom:14px;margin-bottom:12px}.screen-heading h1{font-size:24px}.screen-heading p{font-size:11px}}
+@media(max-width:600px){.app-screen{min-height:calc(100svh - 160px)}.screen-heading{padding-bottom:14px;margin-bottom:12px}.screen-heading h1{font-size:24px}.screen-heading p{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.app-screen.is-active{animation:none;opacity:1;transform:none}}
 </style></head>
 <body><div class="toast" id="toast"></div><div class="app">
@@ -356,9 +359,20 @@ Object.entries(screenConfig).forEach(([id,cfg])=>cfg.selectors.forEach(sel=>docu
 screenNodes.navSettings.append(settingsScreen);
 function showScreen(id){
  const target=screenNodes[id]||screenNodes.navOverview;
- Object.values(screenNodes).forEach(screen=>{const active=screen===target;screen.classList.toggle('is-active',active);screen.setAttribute('aria-hidden',String(!active));});
- document.querySelectorAll('.nav button').forEach(b=>{const active=b.id===id||(id==='navOverview'&&b.querySelector('#navOverview'));b.classList.toggle('active',!!active);b.setAttribute('aria-current',active?'page':'false')});
- window.scrollTo({top:0,behavior:'instant'});
+ document.body.classList.add('averlyx-screen-mode');
+ Object.entries(screenNodes).forEach(([key,screen])=>{
+  const active=screen===target;
+  screen.classList.toggle('is-active',active);
+  screen.style.setProperty('display',active?'block':'none','important');
+  screen.setAttribute('aria-hidden',String(!active));
+  screen.inert=!active;
+ });
+ document.querySelectorAll('.nav button').forEach(b=>{
+  const active=b.id===id||(id==='navOverview'&&b.querySelector('#navOverview'));
+  b.classList.toggle('active',!!active);
+  if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');
+ });
+ window.scrollTo({top:0,left:0,behavior:'instant'});
 }
 $('navOverview').closest('button').onclick=()=>showScreen('navOverview');
 $('navGoals').onclick=()=>showScreen('navGoals');$('navStats').onclick=()=>showScreen('navStats');$('navPlan').onclick=()=>showScreen('navPlan');$('navWins').onclick=()=>showScreen('navWins');$('navSettings').onclick=()=>showScreen('navSettings');
