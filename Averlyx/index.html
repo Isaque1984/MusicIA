@@ -16,6 +16,132 @@
 dialog{width:min(92vw,460px);border:1px solid var(--line);border-radius:18px;background:#102638;color:var(--text);padding:20px}dialog::backdrop{background:#000b;backdrop-filter:blur(3px)}dialog h2{margin:0 0 15px;font-size:18px}label{display:block;color:var(--muted);font-size:11px;margin:11px 0 5px}input,select.field{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#091a28;color:var(--text);outline:none}.actions{display:flex;gap:9px;margin-top:17px}.actions>*{flex:1}.ghost{border:1px solid var(--line);background:#173247;color:var(--text);border-radius:10px;padding:11px;font-weight:700}.toast{position:fixed;top:15px;left:50%;transform:translateX(-50%);background:#173d37;border:1px solid #287d66;color:#b9f5df;padding:9px 14px;border-radius:30px;z-index:9;display:none;font-size:12px}
 @media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.layout,.bottom{grid-template-columns:1fr}.app{padding:17px 13px 95px}.metric{min-height:104px}.welcome{align-items:center}.welcome p{max-width:250px}.welcome .primary{padding:10px 11px;font-size:11px}.ringrow{justify-content:center}.ringdetails{max-width:190px}}
 @media(min-width:761px){.nav{display:none}}
+
+/* Averlyx visual refinement */
+:root{--bg:#07111f;--surface:#0d1b2b;--surface2:#12263a;--line:#20364d;--text:#f2f7fb;--muted:#9aafc2;--green:#48e0b0;--blue:#78b6ff}
+body{background:radial-gradient(ellipse at 50% -18%,#1b3d55 0,transparent 48%),linear-gradient(180deg,#081625 0%,#07111f 55%,#091523 100%);letter-spacing:.01em}
+.app{max-width:1180px;padding:28px 26px 112px}
+.top{margin-bottom:34px;padding:0 2px}
+.mark{width:44px;height:44px;border-radius:14px;font-size:21px;box-shadow:0 10px 30px #19b98a30}
+.brandname{font-size:15px;letter-spacing:2.3px}
+.tagline{font-size:12px}
+.lang{padding:10px 13px;border-radius:12px;background:#102338;color:var(--text)}
+.avatar{width:40px;height:40px;background:linear-gradient(145deg,#24465d,#173044);border:1px solid #31516a}
+.welcome{position:relative;overflow:hidden;padding:27px 29px;margin:0 0 18px;border:1px solid #29465d;border-radius:22px;background:linear-gradient(115deg,#122b40 0%,#102337 55%,#123b3a 130%);align-items:center;min-height:148px;box-shadow:0 18px 45px #0003}
+.welcome:after{content:"";position:absolute;width:230px;height:230px;border-radius:50%;right:8%;top:-145px;border:1px solid #6ce6c533;box-shadow:0 0 0 25px #6ce6c50a,0 0 0 55px #6ce6c508;pointer-events:none}
+.welcome>div,.welcome>button{position:relative;z-index:1}
+.eyebrow{font-size:10px;letter-spacing:2.2px}
+.welcome h1{font-size:clamp(27px,4vw,36px);margin:9px 0 6px;letter-spacing:-1px}
+.welcome p{font-size:13px;color:#b1c4d2}
+.primary{border-radius:12px;padding:13px 18px;font-size:12px;box-shadow:0 8px 24px #31d6a033;transition:transform .18s,filter .18s}
+.primary:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.grid{gap:14px}
+.metric{position:relative;min-height:132px;padding:19px;border-radius:18px;background:linear-gradient(145deg,#122a3e,#0d1c2b 85%);box-shadow:0 10px 28px #0002;transition:transform .2s,border-color .2s}
+.metric:hover{transform:translateY(-2px);border-color:#36556b}
+.metric-head{font-size:12px;font-weight:600;gap:8px}
+.metric-icon{width:31px;height:31px;border-radius:10px;background:#173c43;font-size:15px}
+.metric strong{font-size:29px;margin:12px 0 3px;line-height:1.1}
+.trend{font-size:11px}
+.layout{grid-template-columns:minmax(0,1.55fr) minmax(310px,1fr);gap:15px;margin-top:16px}
+.bottom{grid-template-columns:minmax(0,1.25fr) minmax(300px,.9fr);gap:15px;margin-top:16px}
+.panel{padding:21px;border-radius:19px;background:linear-gradient(145deg,#102438,#0c1b2a);box-shadow:0 12px 32px #0002}
+.panelhead{margin-bottom:18px;min-height:26px}
+.panelhead h2{font-size:15px;letter-spacing:-.15px}
+.panelhead small{font-size:11px}
+.period{padding:8px 10px;border-radius:9px;background:#0b1b2a}
+.chartwrap{height:190px;margin:4px 0 0}
+.axis{font-size:10px;padding:0 2px}
+.legend{margin-top:14px;font-size:11px}
+.ringrow{gap:22px;min-height:190px;justify-content:center}
+.ring{width:136px;height:136px}
+.ring:before{inset:11px}
+.ringinner strong{font-size:28px}
+.ringinner small{font-size:9px;letter-spacing:1px}
+.ringdetails{gap:15px;max-width:200px}
+.ringdetails div{font-size:12px;padding-bottom:8px;border-bottom:1px solid #20394d}
+.ringdetails div:last-child{border:0}
+.ringdetails b{font-size:13px}
+.goaltools{gap:10px;margin-bottom:15px}
+.goaltools input,.goaltools select{min-width:130px}
+input,select.field{padding:12px 13px;border-radius:11px;background:#091a29}
+.goalitem{padding:15px 0;border-bottom:1px solid #263d50}
+.goalname b{font-size:13px;line-height:1.4}
+.chip{font-size:10px;padding:5px 9px}
+.progress{height:7px;margin:11px 0 7px}
+.goalmeta{font-size:11px;gap:10px}
+.goal-actions{gap:7px;margin-top:12px}
+.goal-actions button{padding:8px 11px;font-size:10px;border-radius:9px}
+.ghost{border-radius:10px;transition:background .18s,border-color .18s}
+.ghost:hover{background:#20415a;border-color:#3c617a}
+.activity{gap:0}
+.activityrow{padding:12px 0;border-bottom:1px solid #20394d;align-items:flex-start}
+.activityrow:last-child{border:0}
+.activityicon{width:34px;height:34px;flex:none}
+.activityrow b{font-size:11px;line-height:1.5;overflow-wrap:anywhere}
+.activityrow small{display:block;margin-top:3px;font-size:10px}
+.utility{gap:9px;margin-top:18px}
+.utility button{flex:1}
+.empty{padding:26px 10px}
+.nav{background:#081625ed;border-top:1px solid #294156;box-shadow:0 -12px 35px #0003}
+.navinner{max-width:680px;padding-top:11px}
+.nav button{font-size:10px;min-width:68px;gap:5px}
+.nav button span{font-size:19px}
+.nav button.active{color:var(--green)}
+dialog{box-shadow:0 24px 80px #0008;padding:24px}
+dialog h2{font-size:20px}
+label{font-size:11px;font-weight:650;margin:14px 0 6px}
+.actions{margin-top:21px}
+.toast{box-shadow:0 10px 35px #0005}
+@media(max-width:900px){.app{padding-left:18px;padding-right:18px}.layout,.bottom{grid-template-columns:1fr}.ringrow{min-height:160px}}
+@media(max-width:600px){
+ .app{padding:14px 13px 100px}
+ .top{margin-bottom:19px}
+ .mark{width:39px;height:39px}
+ .brandname{font-size:13px;letter-spacing:1.8px}
+ .tagline{font-size:10px}
+ .topright{gap:7px}
+ .lang{max-width:112px;padding:9px 7px;font-size:11px}
+ .avatar{width:35px;height:35px}
+ .welcome{padding:21px 18px;min-height:142px;border-radius:18px;align-items:flex-start}
+ .welcome h1{font-size:26px}
+ .welcome p{font-size:12px;max-width:225px;line-height:1.5}
+ .welcome .primary{align-self:center;padding:11px 12px;font-size:11px;white-space:nowrap}
+ .grid{gap:10px}
+ .metric{padding:14px;min-height:112px;border-radius:15px}
+ .metric-head{font-size:10px}
+ .metric-icon{width:27px;height:27px}
+ .metric strong{font-size:25px;margin-top:9px}
+ .trend{font-size:10px}
+ .layout,.bottom{gap:11px;margin-top:11px}
+ .panel{padding:16px;border-radius:16px}
+ .panelhead{gap:7px;margin-bottom:14px}
+ .panelhead h2{font-size:14px}
+ .panelhead small{font-size:10px}
+ .chartwrap{height:160px}
+ .ringrow{gap:15px;min-height:145px}
+ .ring{width:112px;height:112px}
+ .ringinner strong{font-size:24px}
+ .ringdetails{gap:10px}
+ .ringdetails div{font-size:10px;padding-bottom:6px}
+ .ringdetails b{font-size:11px}
+ .goaltools{display:grid;grid-template-columns:1fr}
+ .goaltools input,.goaltools select{width:100%;min-width:0}
+ .goal-actions button{padding:8px 9px;font-size:10px}
+ .goalmeta{font-size:10px}
+ .utility{display:grid;grid-template-columns:1fr 1fr}
+ .utility button{font-size:10px;padding:10px 7px}
+ .navinner{padding-left:3px;padding-right:3px}
+ .nav button{min-width:0;flex:1;font-size:9px}
+}
+@media(max-width:370px){
+ .welcome{display:block}
+ .welcome .primary{margin-top:14px}
+ .metric{padding:12px}
+ .metric strong{font-size:23px}
+ .ringrow{gap:10px}
+ .ring{width:100px;height:100px}
+}
+
 </style></head>
 <body><div class="toast" id="toast"></div><div class="app">
 <header class="top"><div class="brand"><div class="mark">A</div><div><div class="brandname">AVERLYX <span>TARGETS</span></div><div class="tagline">Personal progress, clearly measured.</div></div></div><div class="topright"><select class="lang" id="lang" aria-label="Language"><option value="en">English</option><option value="pt">Português</option><option value="es">Español</option></select><div class="avatar">A</div></div></header>
