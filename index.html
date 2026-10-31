@@ -74,4 +74,105 @@ $('lang').value=lang;
 $('lang').onchange=e=>{lang=e.target.value;applyLang();};
 applyLang();
 </script>
+
+<style id="averlyx-pro-upgrade">
+:root{--accent:#43e3b1;--violet:#8d9cff;--panel-shadow:0 16px 42px #020a1266}
+body{background:radial-gradient(ellipse at 12% 0%,#163a4c 0,transparent 34%),radial-gradient(ellipse at 100% 55%,#142b49 0,transparent 30%),#071321}
+.app{max-width:1180px;padding-top:26px}.brandname{letter-spacing:2.5px}.mark{box-shadow:0 0 0 5px #31d6a012,0 12px 28px #31d6a033}
+.panel,.metric{box-shadow:var(--panel-shadow);backdrop-filter:blur(12px);transition:transform .2s,border-color .2s}.panel:hover{border-color:#31536b}.metric{position:relative;overflow:hidden}.metric:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;right:-35px;bottom:-52px;background:#31d6a00b}
+.metric strong{font-size:29px}.primary{background:linear-gradient(135deg,#53edbd,#24bd96);box-shadow:0 8px 24px #31d6a033}.primary:hover{filter:brightness(1.07)}
+.upgradebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px;padding:12px 14px;background:linear-gradient(110deg,#122b40,#102334);border:1px solid #27465b;border-radius:15px}
+.upgradebar .left{display:flex;align-items:center;gap:10px}.upgradebadge{font-size:9px;letter-spacing:1.2px;color:#b9f4e2;background:#16483f;border:1px solid #286d5c;padding:5px 8px;border-radius:20px;font-weight:800}.upgradebar strong{font-size:12px}.upgradebar small{display:block;color:var(--muted);font-size:10px;margin-top:2px}.upgradeactions{display:flex;gap:7px;flex-wrap:wrap}.mini-action{border:1px solid #2a4a60;background:#173247;color:#dcebf3;padding:8px 10px;border-radius:9px;font-size:10px;font-weight:700}.mini-action:hover{border-color:#43b99c;color:#8de9cc}
+.goaltools{display:grid;grid-template-columns:minmax(140px,1.5fr) repeat(3,minmax(100px,1fr));gap:8px;margin:0 0 12px}.goaltools input,.goaltools select{min-width:0;width:100%;background:#091a28;border:1px solid var(--line);color:var(--text);padding:9px 10px;border-radius:9px;font-size:11px}
+.goalitem{padding:14px;background:#0c2030;border:1px solid #1d394d;border-radius:13px;margin-bottom:9px}.goalitem:last-child{border:1px solid #1d394d}.goalname{align-items:flex-start}.goalname b{font-size:13px;line-height:1.4}.goalitem .progress{height:7px}.goalitem .ghost{font-size:10px;transition:.15s}.goalitem .ghost:hover{border-color:#4b9e8c;background:#1b4050}.goalmeta{font-size:10px}.goal-extra{display:flex;align-items:center;justify-content:space-between;gap:8px;color:var(--muted);font-size:10px;margin-top:8px}.priority{font-size:9px;border-radius:20px;padding:3px 7px;background:#28384c;color:#c4d3df}.priority.high{background:#482c32;color:#ffb2b2}.priority.medium{background:#473b27;color:#f1d18e}.goal-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}.goal-actions button{padding:6px 9px!important}
+.quick-progress{display:flex;gap:6px;align-items:center}.quick-progress button{border:1px solid #28634f;background:#12392f;color:#9df0d1;border-radius:8px;padding:5px 8px;font-size:10px}
+.activityrow{padding-bottom:10px;border-bottom:1px solid #20394d}.activityrow:last-child{border:0}
+@media(max-width:650px){.upgradebar{align-items:flex-start;flex-direction:column}.upgradeactions{width:100%}.goaltools{grid-template-columns:1fr 1fr}.goaltools input{grid-column:span 2}.app{padding-top:16px}.metric strong{font-size:26px}}
+@media(min-width:900px){.bottom{grid-template-columns:1.4fr 1fr}.goal-list{max-height:520px;overflow:auto;padding-right:4px}}
+</style>
+<div class="upgradebar" id="upgradebar">
+ <div class="left"><span class="upgradebadge">AVERLYX PLUS</span><div><strong id="plusTitle">Mais controle sobre cada objetivo</strong><small id="plusSub">Organize, acompanhe e acompanhe sua evolução.</small></div></div>
+ <div class="upgradeactions"><button class="mini-action" id="exportGoals">↓ <span id="exportLabel">Exportar dados</span></button><button class="mini-action" id="importTrigger">↑ <span id="importLabel">Importar backup</span></button><button class="mini-action" id="resetFilters">↺ <span id="clearLabel">Limpar filtros</span></button><input id="importFile" type="file" accept="application/json,.json" hidden></div>
+</div>
+<div class="goaltools" id="goaltools">
+ <input id="goalSearch" type="search" placeholder="⌕  Buscar objetivo...">
+ <select id="goalFilter"><option value="all">Todos os estados</option><option value="active">Em andamento</option><option value="done">Concluídos</option><option value="late">Atrasados</option></select>
+ <select id="goalCategory"><option value="all">Todas as categorias</option><option value="personal">Pessoal</option><option value="finance">Finanças</option><option value="health">Saúde</option><option value="study">Estudos</option><option value="work">Trabalho</option><option value="other">Outro</option></select>
+ <select id="goalSort"><option value="recent">Mais recentes</option><option value="progress">Maior progresso</option><option value="deadline">Prazo mais próximo</option><option value="priority">Prioridade</option></select>
+</div>
+
+<script id="averlyx-pro-features">
+(()=>{
+ const $=id=>document.getElementById(id);
+ const labels={
+ en:{plusTitle:"More control over every goal",plusSub:"Organize, track and understand your progress.",exportLabel:"Export data",importLabel:"Import backup",clearLabel:"Clear filters",search:"⌕  Search goals...",all:"All statuses",active:"In progress",done:"Completed",late:"Overdue",allCats:"All categories",recent:"Most recent",progress:"Highest progress",deadline:"Nearest deadline",priority:"Priority",high:"High",medium:"Medium",low:"Low",due:"Due",noDue:"No deadline",add:"＋ Progress",notes:"Notes",notesPlaceholder:"Add details or next steps...",priorityLabel:"Priority",quick:"Update",empty:"No goals match these filters.",exported:"Backup exported successfully.",imported:"Backup imported successfully.",badFile:"This backup file is not valid.",updated:"Progress updated",noteSaved:"Notes saved",today:"Today",overdue:"Overdue"},
+ pt:{plusTitle:"Mais controle sobre cada objetivo",plusSub:"Organize, acompanhe e entenda sua evolução.",exportLabel:"Exportar dados",importLabel:"Importar backup",clearLabel:"Limpar filtros",search:"⌕  Buscar metas...",all:"Todos os estados",active:"Em andamento",done:"Concluídas",late:"Atrasadas",allCats:"Todas as categorias",recent:"Mais recentes",progress:"Maior progresso",deadline:"Prazo mais próximo",priority:"Prioridade",high:"Alta",medium:"Média",low:"Baixa",due:"Prazo",noDue:"Sem prazo",add:"＋ Progresso",notes:"Anotações",notesPlaceholder:"Adicione detalhes ou próximos passos...",priorityLabel:"Prioridade",quick:"Atualizar",empty:"Nenhuma meta corresponde aos filtros.",exported:"Backup exportado com sucesso.",imported:"Backup importado com sucesso.",badFile:"Este arquivo de backup não é válido.",updated:"Progresso atualizado",noteSaved:"Anotações salvas",today:"Hoje",overdue:"Atrasada"},
+ es:{plusTitle:"Más control de cada objetivo",plusSub:"Organiza, sigue y comprende tu progreso.",exportLabel:"Exportar datos",importLabel:"Importar copia",clearLabel:"Limpiar filtros",search:"⌕  Buscar metas...",all:"Todos los estados",active:"En progreso",done:"Completadas",late:"Atrasadas",allCats:"Todas las categorías",recent:"Más recientes",progress:"Mayor progreso",deadline:"Fecha más próxima",priority:"Prioridad",high:"Alta",medium:"Media",low:"Baja",due:"Fecha",noDue:"Sin fecha",add:"＋ Progreso",notes:"Notas",notesPlaceholder:"Añade detalles o próximos pasos...",priorityLabel:"Prioridad",quick:"Actualizar",empty:"Ninguna meta coincide con estos filtros.",exported:"Copia exportada correctamente.",imported:"Copia importada correctamente.",badFile:"El archivo no es válido.",updated:"Progreso actualizado",noteSaved:"Notas guardadas",today:"Hoy",overdue:"Atrasada"}
+ };
+ const L=()=>labels[lang]||labels.en;
+ const catLabels={personal:{en:"Personal",pt:"Pessoal",es:"Personal"},finance:{en:"Finance",pt:"Finanças",es:"Finanzas"},health:{en:"Health",pt:"Saúde",es:"Salud"},study:{en:"Study",pt:"Estudos",es:"Estudios"},work:{en:"Work",pt:"Trabalho",es:"Trabajo"},other:{en:"Other",pt:"Outro",es:"Otro"}};
+ const tr=(key)=>L()[key]||labels.en[key]||key;
+ const toastMsg=s=>{if(typeof toast==="function")toast(s);};
+ const tools=$("goaltools"); const goalsPanel=$("goalList");
+ const originalRender=render;
+ function setupToolLabels(){
+  $("plusTitle").textContent=tr("plusTitle");$("plusSub").textContent=tr("plusSub");
+  $("exportLabel").textContent=tr("exportLabel");$("importLabel").textContent=tr("importLabel");$("clearLabel").textContent=tr("clearLabel");
+  $("goalSearch").placeholder=tr("search");
+  const opts=[["goalFilter",[["all","all"],["active","active"],["done","done"],["late","late"]]],["goalCategory",[["all","allCats"],...Object.keys(catLabels).map(k=>[k,k])]],["goalSort",[["recent","recent"],["progress","progress"],["deadline","deadline"],["priority","priority"]]]];
+  for(const [id,entries] of opts){const el=$(id),old=el.value;el.innerHTML="";entries.forEach(([v,k])=>{let o=document.createElement("option");o.value=v;o.textContent=catLabels[v]?(catLabels[v][lang]||catLabels[v].en):tr(k);el.append(o)});el.value=old||"all";}
+ }
+ function filtered(){
+  let q=$("goalSearch").value.toLocaleLowerCase(),status=$("goalFilter").value,cat=$("goalCategory").value,sort=$("goalSort").value;
+  let arr=[...items].filter(g=>(g.name||"").toLocaleLowerCase().includes(q)||(g.notes||"").toLocaleLowerCase().includes(q))
+   .filter(g=>status==="all"||(status==="active"&&!g.done)||(status==="done"&&g.done)||(status==="late"&&!g.done&&g.date&&g.date<new Date().toISOString().slice(0,10)))
+   .filter(g=>cat==="all"||g.category===cat);
+  arr.sort((a,b)=>sort==="progress"?(b.current/b.target)-(a.current/a.target):sort==="deadline"?((a.date||"9999").localeCompare(b.date||"9999")):sort==="priority"?(({high:0,medium:1,low:2}[a.priority||"medium"])-({high:0,medium:1,low:2}[b.priority||"medium"])):b.id-a.id);
+  return arr;
+ }
+ function drawGoals(){
+  const arr=filtered();goalsPanel.innerHTML="";
+  if(!arr.length){let e=document.createElement("div");e.className="empty";e.textContent=tr("empty");goalsPanel.append(e);return;}
+  arr.forEach(g=>{
+   let p=Math.max(0,Math.min(100,Math.round(g.current/g.target*100)));
+   let el=document.createElement("article");el.className="goalitem";
+   let head=document.createElement("div");head.className="goalname";
+   let title=document.createElement("b");title.textContent=g.name;
+   let chip=document.createElement("span");chip.className="chip";chip.textContent=catLabels[g.category]?.[lang]||catLabels[g.category]?.en||g.category;
+   head.append(title,chip);
+   let extra=document.createElement("div");extra.className="goal-extra";
+   let pri=document.createElement("span");pri.className="priority "+(g.priority||"medium");pri.textContent=tr(g.priority||"medium");
+   let due=document.createElement("span");due.textContent=g.date?tr("due")+": "+new Date(g.date+"T12:00:00").toLocaleDateString(localeMap[lang]||"en-US"):"";
+   extra.append(pri,due);
+   let bar=document.createElement("div");bar.className="progress";let fill=document.createElement("i");fill.style.width=p+"%";bar.append(fill);
+   let meta=document.createElement("div");meta.className="goalmeta";let val=document.createElement("span");val.textContent=new Intl.NumberFormat(localeMap[lang]||"en-US",{maximumFractionDigits:2}).format(g.current)+" / "+new Intl.NumberFormat(localeMap[lang]||"en-US",{maximumFractionDigits:2}).format(g.target);let pct=document.createElement("b");pct.textContent=p+"%";meta.append(val,pct);
+   let actions=document.createElement("div");actions.className="goal-actions";
+   const btn=(label,fn)=>{let b=document.createElement("button");b.className="ghost";b.type="button";b.textContent=label;b.onclick=fn;actions.append(b)};
+   btn("＋ 10%",()=>{g.current=Math.min(g.target,Number(g.current)+g.target*.1);if(g.current>=g.target)g.done=true;eventLog(tr("updated")+": "+g.name);save();});
+   btn("＋ 25%",()=>{g.current=Math.min(g.target,Number(g.current)+g.target*.25);if(g.current>=g.target)g.done=true;eventLog(tr("updated")+": "+g.name);save();});
+   btn("✎ "+t("edit"),()=>open(g.id));
+   btn(g.done?t("reopen"):t("mark"),()=>{g.done=!g.done;if(g.done)g.current=g.target;eventLog(t(g.done?"completed":"updated")+": "+g.name);save();});
+   btn("⋯",()=>{let n=prompt(tr("notesPlaceholder"),g.notes||"");if(n!==null){g.notes=n;eventLog(tr("noteSaved")+": "+g.name);save();}});
+   btn("×",()=>{if(confirm(t("confirm"))){items=items.filter(x=>x.id!==g.id);save();}});
+   el.append(head,extra,bar,meta);
+   if(g.notes){let note=document.createElement("div");note.className="goal-extra";note.textContent="✎ "+g.notes;el.append(note);}
+   el.append(actions);goalsPanel.append(el);
+  });
+ }
+ render=function(){originalRender();drawGoals();};
+ ["goalSearch","goalFilter","goalCategory","goalSort"].forEach(id=>$(id).addEventListener(id==="goalSearch"?"input":"change",drawGoals));
+ $("resetFilters").onclick=()=>{$("goalSearch").value="";$("goalFilter").value="all";$("goalCategory").value="all";$("goalSort").value="recent";drawGoals();};
+ $("exportGoals").onclick=()=>{let data={app:"Averlyx Targets",version:2,exportedAt:new Date().toISOString(),goals:items,events};let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});let url=URL.createObjectURL(blob);let a=document.createElement("a");a.href=url;a.download="averlyx-targets-backup.json";a.click();URL.revokeObjectURL(url);toastMsg(tr("exported"));};
+ $("importTrigger").onclick=()=>$("importFile").click();
+ $("importFile").onchange=async e=>{let file=e.target.files[0];if(!file)return;try{let data=JSON.parse(await file.text());if(!Array.isArray(data.goals))throw Error();if(!confirm("Importar "+data.goals.length+" metas? Os dados atuais serão substituídos."))return;items=data.goals;events=Array.isArray(data.events)?data.events:[];save();toastMsg(tr("imported"));}catch(_){toastMsg(tr("badFile"));}e.target.value="";};
+ // Add priority and notes to the existing goal editor without changing stored goal IDs or keys.
+ if(!$("priorityField")){let wrap=document.createElement("div");wrap.innerHTML='<label id="priorityLabel">'+tr("priorityLabel")+'</label><select class="field" id="priorityField"><option value="low">'+tr("low")+'</option><option value="medium">'+tr("medium")+'</option><option value="high">'+tr("high")+'</option></select><label id="notesLabel">'+tr("notes")+'</label><input id="notesField" maxlength="180" placeholder="'+tr("notesPlaceholder")+'">';$("date").insertAdjacentElement("afterend",wrap);}
+ const oldOpen=open;
+ open=function(id=null){oldOpen(id);let g=items.find(x=>x.id===id);$("priorityField").value=g?.priority||"medium";$("notesField").value=g?.notes||"";};
+ const form=$("form");form.addEventListener("submit",()=>{let g=items.find(x=>x.id===editId);if(g){g.priority=$("priorityField").value;g.notes=$("notesField").value;}});
+ const oldApply=applyLang;
+ applyLang=function(){oldApply();setupToolLabels();if($("priorityLabel"))$("priorityLabel").textContent=tr("priorityLabel");if($("notesLabel"))$("notesLabel").textContent=tr("notes");if($("priorityField"))Array.from($("priorityField").options).forEach(o=>o.textContent=tr(o.value));if($("notesField"))$("notesField").placeholder=tr("notesPlaceholder");drawGoals();};
+ setupToolLabels();render();
+})();
+</script>
 </body></html>
