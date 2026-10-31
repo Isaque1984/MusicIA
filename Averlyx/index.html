@@ -185,7 +185,8 @@ label{font-size:11px;font-weight:650;margin:14px 0 6px}
 .module-card .wide{width:100%}.module-card input[type=number],.module-card input[type=text],.module-card input[type=time]{min-width:0}
 .history-list{display:grid;gap:8px;max-height:230px;overflow:auto}.history-item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:11px}.history-item small{display:block;color:var(--muted);margin-top:3px}
 @media(max-width:600px){.extra-grid{grid-template-columns:1fr}.module-card{padding:16px}}
-\n</style></head>
+\n.view-hidden{display:none!important}.settings-screen{margin:16px 0 90px}.settings-screen .utility{display:flex;flex-wrap:wrap;gap:10px}.settings-language{margin-top:18px}.settings-language label{display:block}
+</style></head>
 <body><div class="toast" id="toast"></div><div class="app">
 <header class="top"><div class="brand"><div class="mark">A</div><div><div class="brandname">AVERLYX <span>TARGETS</span></div><div class="tagline">Personal progress, clearly measured.</div></div></div><div class="topright"><select class="lang" id="lang" aria-label="Language"><option value="en">English</option><option value="pt">Português</option><option value="es">Español</option></select><div class="avatar">A</div></div></header>
 <section class="welcome"><div><div class="eyebrow" id="eyebrow">SEU PROGRESSO EM FOCO</div><h1 id="hello">Visão geral</h1><p id="subhello">Pequenos avanços constroem grandes resultados.</p></div><button class="primary" id="newGoal">＋ Nova meta</button></section>
@@ -304,7 +305,29 @@ $('monthNext').onclick=()=>{calendarDate.setMonth(calendarDate.getMonth()+1);ren
 
 function open(id=null){editId=id;let g=items.find(x=>x.id===id);$('form').reset();$('name').value=g?.name||'';$('cat').value=g?.category||'personal';$('target').value=g?.target||'';$('current').value=g?.current||0;$('date').value=g?.date||'';$('currency').value=g?.currency||'';$('priority').value=g?.priority||'normal';$('nextAction').value=g?.nextAction||'';applyLang();$('dlg').showModal()}
 $('newGoal').onclick=()=>open();$('goalSearch').oninput=render;$('goalFilter').onchange=render;$('exportData').onclick=exportBackup;$('importData').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{if(e.target.files?.[0])importBackup(e.target.files[0]);e.target.value=''};$('cancel').onclick=()=>$('dlg').close();$('lang').onchange=e=>{lang=e.target.value;localStorage.setItem('averlyx_language',lang);applyLang()};$('period').onchange=()=>drawChart();$('form').onsubmit=e=>{e.preventDefault();let g={id:editId??Date.now(),name:$('name').value.trim(),category:$('cat').value,target:Number($('target').value),current:Number($('current').value),date:$('date').value,currency:$('currency').value,priority:$('priority').value,nextAction:$('nextAction').value.trim(),done:false,paused:false,transactions:[]};if(!g.name||g.target<=0||g.current<0)return;if(editId!==null){let old=items.find(x=>x.id===editId);g.done=old.done;g.paused=old.paused;g.updatedAt=old.updatedAt;g.transactions=old.transactions||[];items=items.map(x=>x.id===editId?g:x);eventLog(t('updated')+': '+g.name)}else{items.unshift(g);eventLog(t('created')+': '+g.name)}$('dlg').close();save()};
-function setActiveNav(id){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.id===id))}$('navOverview').closest('button').onclick=()=>{window.scrollTo({top:0,behavior:'smooth'});setActiveNav('navOverview')};$('navGoals').onclick=()=>{$('goalsTitle').scrollIntoView({behavior:'smooth',block:'center'});setActiveNav('navGoals')};$('navStats').onclick=()=>{$('chartTitle').scrollIntoView({behavior:'smooth',block:'center'});setActiveNav('navStats')};$('navPlan').onclick=()=>{$('planningSection').scrollIntoView({behavior:'smooth',block:'start'});setActiveNav('navPlan')};$('navWins').onclick=()=>{$('achievementsSection').scrollIntoView({behavior:'smooth',block:'start'});setActiveNav('navWins')};$('navSettings').onclick=()=>{$('lang').scrollIntoView({behavior:'smooth',block:'center'});$('lang').focus();setActiveNav('navSettings');toast(t('settingsHint'))};
+function setActiveNav(id){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.id===id))}
+const screenGroups={
+ navOverview:['.welcome','.grid'],
+ navGoals:['.bottom'],
+ navStats:['.layout'],
+ navPlan:['#planningSection','#advancedModules'],
+ navWins:['#achievementsSection'],
+ navSettings:['#settingsScreen']
+};
+function showScreen(id){
+ const all=['.welcome','.grid','.layout','.bottom','#planningSection','#achievementsSection','#advancedModules','#settingsScreen'];
+ all.forEach(sel=>document.querySelectorAll(sel).forEach(el=>el.classList.add('view-hidden')));
+ (screenGroups[id]||screenGroups.navOverview).forEach(sel=>document.querySelectorAll(sel).forEach(el=>el.classList.remove('view-hidden')));
+ setActiveNav(id);window.scrollTo({top:0,behavior:'instant'});
+}
+const settingsScreen=document.createElement('section');settingsScreen.id='settingsScreen';settingsScreen.className='panel settings-screen';settingsScreen.innerHTML='<div class="panelhead"><h2 id="settingsTitle">Settings</h2></div>';
+const utilityPanel=document.createElement('div');utilityPanel.className='utility';const originalUtility=document.querySelector('.bottom .utility');if(originalUtility){utilityPanel.append(...originalUtility.children);originalUtility.remove()}settingsScreen.append(utilityPanel);
+const languagePanel=document.createElement('div');languagePanel.className='settings-language';const languageControl=$('lang')?.closest('label')||$('lang')?.parentElement;if(languageControl)languagePanel.append(languageControl);settingsScreen.append(languagePanel);
+const advancedSettings=document.createElement('p');advancedSettings.className='muted';advancedSettings.textContent='Your data is stored on this device. Export a backup regularly.';settingsScreen.append(advancedSettings);
+document.querySelector('.app').insertBefore(settingsScreen,document.querySelector('.nav'));
+$('navOverview').closest('button').onclick=()=>showScreen('navOverview');
+$('navGoals').onclick=()=>showScreen('navGoals');$('navStats').onclick=()=>showScreen('navStats');$('navPlan').onclick=()=>showScreen('navPlan');$('navWins').onclick=()=>showScreen('navWins');$('navSettings').onclick=()=>showScreen('navSettings');
+showScreen('navOverview');
 function toast(s){$('toast').textContent=s;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
 
 /* Additional goal tools: simulator, challenges, reminders, monthly summary and history */
