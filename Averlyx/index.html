@@ -347,7 +347,7 @@ Object.entries(screenConfig).forEach(([id,cfg])=>{
  heading.append(eyebrow,title,subtitle);screen.append(heading);screenHost.append(screen);screenNodes[id]=screen;
 });
 const appRoot=document.querySelector('.app'),navElement=document.querySelector('.nav');
-appRoot.insertBefore(screenHost,navElement);
+appRoot.append(screenHost);
 const settingsScreen=document.createElement('section');settingsScreen.id='settingsScreen';settingsScreen.className='panel settings-screen';
 settingsScreen.innerHTML='<div class="panelhead"><h2 id="settingsTitle">Settings</h2></div>';
 const utilityPanel=document.createElement('div');utilityPanel.className='utility';
