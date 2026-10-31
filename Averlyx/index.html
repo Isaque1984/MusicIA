@@ -186,6 +186,25 @@ label{font-size:11px;font-weight:650;margin:14px 0 6px}
 .history-list{display:grid;gap:8px;max-height:230px;overflow:auto}.history-item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:11px}.history-item small{display:block;color:var(--muted);margin-top:3px}
 @media(max-width:600px){.extra-grid{grid-template-columns:1fr}.module-card{padding:16px}}
 \n.view-hidden{display:none!important}.settings-screen{margin:16px 0 90px}.settings-screen .utility{display:flex;flex-wrap:wrap;gap:10px}.settings-language{margin-top:18px}.settings-language label{display:block}
+
+/* Distinct app screens: each tab owns its own view container */
+.screen-host{min-height:calc(100vh - 170px);position:relative}
+.app-screen{display:none;opacity:0;transform:translateY(8px)}
+.app-screen.is-active{display:block;animation:screenEnter .22s ease forwards}
+.screen-heading{padding:5px 2px 18px;margin:0 0 16px}
+.screen-kicker{display:block;color:var(--green);font-size:9px;font-weight:800;letter-spacing:2px;margin-bottom:8px}
+.screen-heading h1{font-size:clamp(23px,4vw,31px);line-height:1.15;margin:0 0 7px;letter-spacing:-.7px}
+.screen-heading p{margin:0;color:var(--muted);font-size:12px;max-width:520px}
+.app-screen > .welcome{margin-bottom:14px}
+.app-screen > .grid{margin-top:0}
+.app-screen > .layout,.app-screen > .bottom{margin-top:0}
+.app-screen > .planning{margin-top:0}
+.app-screen > #advancedModules{margin-top:14px}
+.app-screen > #achievementsSection{margin-top:0}
+.settings-screen{margin:0 0 90px}
+@keyframes screenEnter{to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.screen-host{min-height:calc(100vh - 150px)}.screen-heading{padding-bottom:14px;margin-bottom:12px}.screen-heading h1{font-size:24px}.screen-heading p{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.app-screen.is-active{animation:none;opacity:1;transform:none}}
 </style></head>
 <body><div class="toast" id="toast"></div><div class="app">
 <header class="top"><div class="brand"><div class="mark">A</div><div><div class="brandname">AVERLYX <span>TARGETS</span></div><div class="tagline">Personal progress, clearly measured.</div></div></div><div class="topright"><select class="lang" id="lang" aria-label="Language"><option value="en">English</option><option value="pt">Português</option><option value="es">Español</option></select><div class="avatar">A</div></div></header>
@@ -306,25 +325,41 @@ $('monthNext').onclick=()=>{calendarDate.setMonth(calendarDate.getMonth()+1);ren
 function open(id=null){editId=id;let g=items.find(x=>x.id===id);$('form').reset();$('name').value=g?.name||'';$('cat').value=g?.category||'personal';$('target').value=g?.target||'';$('current').value=g?.current||0;$('date').value=g?.date||'';$('currency').value=g?.currency||'';$('priority').value=g?.priority||'normal';$('nextAction').value=g?.nextAction||'';applyLang();$('dlg').showModal()}
 $('newGoal').onclick=()=>open();$('goalSearch').oninput=render;$('goalFilter').onchange=render;$('exportData').onclick=exportBackup;$('importData').onclick=()=>$('importFile').click();$('importFile').onchange=e=>{if(e.target.files?.[0])importBackup(e.target.files[0]);e.target.value=''};$('cancel').onclick=()=>$('dlg').close();$('lang').onchange=e=>{lang=e.target.value;localStorage.setItem('averlyx_language',lang);applyLang()};$('period').onchange=()=>drawChart();$('form').onsubmit=e=>{e.preventDefault();let g={id:editId??Date.now(),name:$('name').value.trim(),category:$('cat').value,target:Number($('target').value),current:Number($('current').value),date:$('date').value,currency:$('currency').value,priority:$('priority').value,nextAction:$('nextAction').value.trim(),done:false,paused:false,transactions:[]};if(!g.name||g.target<=0||g.current<0)return;if(editId!==null){let old=items.find(x=>x.id===editId);g.done=old.done;g.paused=old.paused;g.updatedAt=old.updatedAt;g.transactions=old.transactions||[];items=items.map(x=>x.id===editId?g:x);eventLog(t('updated')+': '+g.name)}else{items.unshift(g);eventLog(t('created')+': '+g.name)}$('dlg').close();save()};
 function setActiveNav(id){document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.id===id))}
-const screenGroups={
- navOverview:['.welcome','.grid'],
- navGoals:['.bottom'],
- navStats:['.layout'],
- navPlan:['#planningSection','#advancedModules'],
- navWins:['#achievementsSection'],
- navSettings:['#settingsScreen']
+const screenConfig={
+ navOverview:{title:'Your overview',subtitle:'A clear view of what matters today.',selectors:['.welcome','.grid']},
+ navGoals:{title:'Your goals',subtitle:'Set priorities, define the next step and keep moving.',selectors:['.bottom']},
+ navStats:{title:'Your progress',subtitle:'Understand your consistency and the results you are building.',selectors:['.layout']},
+ navPlan:{title:'Your action plan',subtitle:'Turn intentions into scheduled actions.',selectors:['#planningSection','#advancedModules']},
+ navWins:{title:'Your achievements',subtitle:'Every completed step is part of your story.',selectors:['#achievementsSection']},
+ navSettings:{title:'Your preferences',subtitle:'Control your language and keep your data safe.',selectors:['#settingsScreen']}
 };
-function showScreen(id){
- const all=['.welcome','.grid','.layout','.bottom','#planningSection','#achievementsSection','#advancedModules','#settingsScreen'];
- all.forEach(sel=>document.querySelectorAll(sel).forEach(el=>el.classList.add('view-hidden')));
- (screenGroups[id]||screenGroups.navOverview).forEach(sel=>document.querySelectorAll(sel).forEach(el=>el.classList.remove('view-hidden')));
- setActiveNav(id);window.scrollTo({top:0,behavior:'instant'});
-}
-const settingsScreen=document.createElement('section');settingsScreen.id='settingsScreen';settingsScreen.className='panel settings-screen';settingsScreen.innerHTML='<div class="panelhead"><h2 id="settingsTitle">Settings</h2></div>';
-const utilityPanel=document.createElement('div');utilityPanel.className='utility';const originalUtility=document.querySelector('.bottom .utility');if(originalUtility){utilityPanel.append(...originalUtility.children);originalUtility.remove()}settingsScreen.append(utilityPanel);
-const languagePanel=document.createElement('div');languagePanel.className='settings-language';const languageControl=$('lang')?.closest('label')||$('lang')?.parentElement;if(languageControl)languagePanel.append(languageControl);settingsScreen.append(languagePanel);
+const screenHost=document.createElement('div');screenHost.id='screenHost';screenHost.className='screen-host';
+const screenNodes={};
+Object.entries(screenConfig).forEach(([id,cfg])=>{
+ const screen=document.createElement('section');screen.className='app-screen';screen.dataset.screen=id;screen.setAttribute('aria-label',cfg.title);
+ const heading=document.createElement('header');heading.className='screen-heading';
+ const eyebrow=document.createElement('span');eyebrow.className='screen-kicker';eyebrow.textContent='AVERLYX / '+id.replace('nav','').toUpperCase();
+ const title=document.createElement('h1');title.textContent=cfg.title;
+ const subtitle=document.createElement('p');subtitle.textContent=cfg.subtitle;
+ heading.append(eyebrow,title,subtitle);screen.append(heading);screenHost.append(screen);screenNodes[id]=screen;
+});
+const appRoot=document.querySelector('.app'),navElement=document.querySelector('.nav');
+appRoot.insertBefore(screenHost,navElement);
+const settingsScreen=document.createElement('section');settingsScreen.id='settingsScreen';settingsScreen.className='panel settings-screen';
+settingsScreen.innerHTML='<div class="panelhead"><h2 id="settingsTitle">Settings</h2></div>';
+const utilityPanel=document.createElement('div');utilityPanel.className='utility';
+const originalUtility=document.querySelector('.bottom .utility');
+if(originalUtility){utilityPanel.append(...originalUtility.children);originalUtility.remove()}
+settingsScreen.append(utilityPanel);
 const advancedSettings=document.createElement('p');advancedSettings.className='muted';advancedSettings.textContent='Your data is stored on this device. Export a backup regularly.';settingsScreen.append(advancedSettings);
-document.querySelector('.app').insertBefore(settingsScreen,document.querySelector('.nav'));
+Object.entries(screenConfig).forEach(([id,cfg])=>cfg.selectors.forEach(sel=>document.querySelectorAll(sel).forEach(el=>screenNodes[id].append(el))));
+screenNodes.navSettings.append(settingsScreen);
+function showScreen(id){
+ const target=screenNodes[id]||screenNodes.navOverview;
+ Object.values(screenNodes).forEach(screen=>{const active=screen===target;screen.classList.toggle('is-active',active);screen.setAttribute('aria-hidden',String(!active));});
+ document.querySelectorAll('.nav button').forEach(b=>{const active=b.id===id||(id==='navOverview'&&b.querySelector('#navOverview'));b.classList.toggle('active',!!active);b.setAttribute('aria-current',active?'page':'false')});
+ window.scrollTo({top:0,behavior:'instant'});
+}
 $('navOverview').closest('button').onclick=()=>showScreen('navOverview');
 $('navGoals').onclick=()=>showScreen('navGoals');$('navStats').onclick=()=>showScreen('navStats');$('navPlan').onclick=()=>showScreen('navPlan');$('navWins').onclick=()=>showScreen('navWins');$('navSettings').onclick=()=>showScreen('navSettings');
 showScreen('navOverview');
