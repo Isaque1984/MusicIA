@@ -174,7 +174,18 @@ label{font-size:11px;font-weight:650;margin:14px 0 6px}
 @media(max-width:900px){.planning{grid-template-columns:1fr}}
 @media(max-width:600px){.task-form{grid-template-columns:1fr 1fr}.task-form input:first-child{grid-column:1/-1}.task-form button{grid-column:1/-1}.achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.calendar-grid{gap:3px}.calendar-grid span{min-height:32px}}
 
-</style></head>
+
+/* Complete-app modules */
+.extra-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:15px}
+.module-card{background:linear-gradient(145deg,#102438,#0c1b2a);border:1px solid var(--line);border-radius:18px;padding:19px;min-width:0}
+.module-card h2{font-size:15px;margin:0 0 6px}.module-card p{color:var(--muted);font-size:11px;margin:0 0 14px}
+.module-card .fieldrow{display:flex;gap:8px;align-items:center;margin:9px 0}
+.module-card button{border-radius:10px;padding:10px 12px}
+.module-card .result{font-size:20px;font-weight:800;color:var(--green);margin:10px 0}
+.module-card .wide{width:100%}.module-card input[type=number],.module-card input[type=text],.module-card input[type=time]{min-width:0}
+.history-list{display:grid;gap:8px;max-height:230px;overflow:auto}.history-item{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:11px}.history-item small{display:block;color:var(--muted);margin-top:3px}
+@media(max-width:600px){.extra-grid{grid-template-columns:1fr}.module-card{padding:16px}}
+\n</style></head>
 <body><div class="toast" id="toast"></div><div class="app">
 <header class="top"><div class="brand"><div class="mark">A</div><div><div class="brandname">AVERLYX <span>TARGETS</span></div><div class="tagline">Personal progress, clearly measured.</div></div></div><div class="topright"><select class="lang" id="lang" aria-label="Language"><option value="en">English</option><option value="pt">Português</option><option value="es">Español</option></select><div class="avatar">A</div></div></header>
 <section class="welcome"><div><div class="eyebrow" id="eyebrow">SEU PROGRESSO EM FOCO</div><h1 id="hello">Visão geral</h1><p id="subhello">Pequenos avanços constroem grandes resultados.</p></div><button class="primary" id="newGoal">＋ Nova meta</button></section>
@@ -190,7 +201,7 @@ label{font-size:11px;font-weight:650;margin:14px 0 6px}
 <div class="panel"><div class="panelhead"><h2 id="completionTitle">Visão de conclusão</h2><small id="completionSub">Distribuição atual</small></div><div class="ringrow"><div class="ring" id="ring"><div class="ringinner"><strong id="ringPct">0%</strong><small id="ringLabel">CONCLUÍDAS</small></div></div><div class="ringdetails"><div><span id="activeDetail">Em andamento</span><b id="activeDetailNum">0</b></div><div><span id="doneDetail">Concluídas</span><b id="doneDetailNum">0</b></div><div><span id="totalDetail">Total de metas</span><b id="totalDetailNum">0</b></div></div></div></div>
 </section>
 <section class="bottom"><div class="panel"><div class="panelhead"><h2 id="goalsTitle">Metas em destaque</h2><small id="goalsSub">Acompanhe suas prioridades</small></div><div class="goaltools"><input id="goalSearch" placeholder="Buscar meta..." aria-label="Buscar meta"><select id="goalFilter" class="field" aria-label="Filtrar metas"><option value="all">Todas as metas</option><option value="active">Em andamento</option><option value="paused">Pausadas</option><option value="done">Concluídas</option></select></div><div class="goal-list" id="goalList"><div class="empty" id="empty">Adicione sua primeira meta para começar.</div></div></div>
-<div class="panel"><div class="panelhead"><h2 id="activityTitle">Atividade recente</h2><small id="activitySub">Neste dispositivo</small></div><div class="activity" id="activity"><div class="empty" id="activityEmpty">Suas atualizações aparecerão aqui.</div></div><div class="utility"><button class="ghost" id="exportData">⇩ Exportar backup</button><button class="ghost" id="importData">⇧ Importar backup</button><input id="importFile" type="file" accept="application/json"></div></div></section>
+<div class="panel"><div class="panelhead"><h2 id="activityTitle">Atividade recente</h2><small id="activitySub">Neste dispositivo</small></div><div class="activity" id="activity"><div class="empty" id="activityEmpty">Suas atualizações aparecerão aqui.</div></div><div class="utility"><button class="ghost" id="shareProgress">↗ Compartilhar</button><button class="ghost" id="exportData">⇩ Exportar backup</button><button class="ghost" id="importData">⇧ Importar backup</button><input id="importFile" type="file" accept="application/json"></div></div></section>
 
 <section class="planning section-anchor" id="planningSection">
  <div class="panel">
@@ -210,7 +221,30 @@ label{font-size:11px;font-weight:650;margin:14px 0 6px}
  <div class="achievement-grid" id="achievementGrid"></div>
 </section>
 </div>
-<nav class="nav"><div class="navinner"><button class="active"><span>▦</span><b id="navOverview">Visão geral</b></button><button id="navGoals"><span>◎</span><b id="navGoalsText">Metas</b></button><button id="navStats"><span>▥</span><b id="navStatsText">Estatísticas</b></button><button id="navPlan"><span>☷</span><b id="navPlanText">Plano</b></button><button id="navWins"><span>✦</span><b id="navWinsText">Conquistas</b></button><button id="navSettings"><span>⚙</span><b id="navSettingsText">Ajustes</b></button></div></nav>
+
+<section class="extra-grid" id="advancedModules">
+ <article class="module-card" id="simulatorSection"><h2 id="simTitle">Simulador de metas</h2><p id="simSub">Descubra quanto precisa avançar por dia para chegar ao seu objetivo.</p>
+  <label id="simTargetLabel">Objetivo total</label><input id="simTarget" type="number" min="0.01" step="any" placeholder="1000">
+  <div class="fieldrow"><div style="flex:1"><label id="simCurrentLabel">Já tenho</label><input id="simCurrent" type="number" min="0" step="any" value="0"></div><div style="flex:1"><label id="simDaysLabel">Prazo em dias</label><input id="simDays" type="number" min="1" step="1" value="30"></div></div>
+  <button class="primary wide" id="runSimulator">Calcular plano</button><div class="result" id="simResult">—</div><small class="muted" id="simDetail">Informe os valores para simular.</small>
+  <button class="ghost wide" id="simCreate" style="margin-top:10px" disabled>Criar meta com este plano</button>
+ </article>
+ <article class="module-card" id="challengeSection"><h2 id="challengeTitle">Desafio de consistência</h2><p id="challengeSub">Escolha uma pequena ação diária e acompanhe sua sequência.</p>
+  <label id="challengeLabel">Ação diária</label><input id="challengeName" type="text" maxlength="70" placeholder="Ex.: estudar 20 minutos">
+  <div class="fieldrow"><div style="flex:1"><label id="challengeDaysLabel">Duração</label><select id="challengeDays" class="field"><option value="7">7 dias</option><option value="21">21 dias</option><option value="30" selected>30 dias</option></select></div><button class="primary" id="startChallenge">Iniciar desafio</button></div>
+  <div class="result" id="challengeProgress">Nenhum desafio ativo</div><button class="ghost wide" id="challengeCheck">Registrar ação de hoje</button><small class="muted" id="challengeInfo">Seu desafio fica salvo neste dispositivo.</small>
+ </article>
+ <article class="module-card" id="reminderSection"><h2 id="reminderTitle">Lembretes</h2><p id="reminderSub">Reserve um horário para lembrar de avançar nas suas metas.</p>
+  <label id="reminderTimeLabel">Horário do lembrete</label><input id="reminderTime" type="time" value="19:00">
+  <div class="fieldrow"><button class="primary wide" id="enableReminder">Ativar lembrete</button><button class="ghost wide" id="disableReminder">Desativar</button></div><small class="muted" id="reminderStatus">Os lembretes dependem da permissão de notificações do navegador.</small>
+ </article>
+ <article class="module-card" id="summarySection"><h2 id="summaryTitle">Resumo do mês</h2><p id="summarySub">Atividade registrada no mês atual.</p>
+  <div class="fieldrow"><div style="flex:1"><small class="muted" id="summaryActionsLabel">Registros</small><div class="result" id="summaryActions">0</div></div><div style="flex:1"><small class="muted" id="summaryGoalsLabel">Metas concluídas</small><div class="result" id="summaryGoals">0</div></div></div>
+  <div class="fieldrow"><div style="flex:1"><small class="muted" id="summaryTasksLabel">Tarefas concluídas</small><div class="result" id="summaryTasks">0</div></div><div style="flex:1"><small class="muted" id="summaryRateLabel">Progresso médio</small><div class="result" id="summaryRate">0%</div></div></div>
+ </article>
+ <article class="module-card" id="historySection" style="grid-column:1/-1"><h2 id="historyTitle">Histórico de progresso</h2><p id="historySub">Movimentações registradas nas suas metas.</p><div class="history-list" id="historyList"><div class="empty">Nenhum registro ainda.</div></div></article>
+</section>
+\n<nav class="nav"><div class="navinner"><button class="active"><span>▦</span><b id="navOverview">Visão geral</b></button><button id="navGoals"><span>◎</span><b id="navGoalsText">Metas</b></button><button id="navStats"><span>▥</span><b id="navStatsText">Estatísticas</b></button><button id="navPlan"><span>☷</span><b id="navPlanText">Plano</b></button><button id="navWins"><span>✦</span><b id="navWinsText">Conquistas</b></button><button id="navSettings"><span>⚙</span><b id="navSettingsText">Ajustes</b></button></div></nav>
 <dialog id="dlg"><form id="form"><h2 id="dialogTitle">Nova meta</h2><label id="lblName">Nome da meta</label><input id="name" required maxlength="65" placeholder="Ex.: Fazer uma reserva financeira"><label id="lblCat">Categoria</label><select id="cat" class="field"><option value="personal">Pessoal</option><option value="finance">Finanças</option><option value="health">Saúde</option><option value="study">Estudos</option><option value="work">Trabalho</option><option value="other">Outro</option></select><label id="lblTarget">Valor ou etapas totais</label><input id="target" type="number" min="1" step="any" required placeholder="100"><label id="lblCurrent">Progresso atual</label><input id="current" type="number" min="0" step="any" value="0"><label id="lblCurrency">Currency (optional)</label><select id="currency" class="field"><option value="">No currency / units</option><option value="USD">USD — US Dollar</option><option value="BRL">BRL — Brazilian Real</option><option value="EUR">EUR — Euro</option><option value="GBP">GBP — Pound Sterling</option><option value="JPY">JPY — Japanese Yen</option><option value="KRW">KRW — Korean Won</option><option value="CNY">CNY — Chinese Yuan</option><option value="CHF">CHF — Swiss Franc</option><option value="CAD">CAD — Canadian Dollar</option><option value="AUD">AUD — Australian Dollar</option><option value="INR">INR — Indian Rupee</option><option value="MXN">MXN — Mexican Peso</option><option value="ARS">ARS — Argentine Peso</option><option value="AED">AED — UAE Dirham</option></select><label id="lblDate">Prazo (opcional)</label><input id="date" type="date"><div class="actions"><button type="button" class="ghost" id="cancel">Cancelar</button><button class="primary" id="save">Salvar meta</button></div></form></dialog>
 <script>
 const $=id=>document.getElementById(id);
