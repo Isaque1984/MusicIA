@@ -175,4 +175,10 @@ body{background:radial-gradient(ellipse at 12% 0%,#163a4c 0,transparent 34%),rad
  setupToolLabels();render();
 })();
 </script>
+<script id="averlyx-save-extra-fields">
+document.getElementById("form").addEventListener("submit",()=>{
+ const goal=(editId!==null?items.find(x=>x.id===editId):items[0]);
+ if(goal){goal.priority=document.getElementById("priorityField").value;goal.notes=document.getElementById("notesField").value;localStorage.setItem("averlyx_prototype_goals",JSON.stringify(items));}
+});
+</script>
 </body></html>
